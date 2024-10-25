@@ -1,15 +1,36 @@
 import React, { Component } from 'react';
+import Joi from 'joi';
 
 
 
 class Sign extends Component {
   state = {
-    userName:"",
-    Password:""
+    username:"",
+    password:"",
+    errors:{}
    } 
 
+    schema = Joi.object().keys({
+    username: Joi.string().required(),
+    password: Joi.string().min(8).required()
+  });
+   
+   valedate = () =>{
+    const state = this.state;
+    delete state.errors
+    const res = this.schema.validate(this.state, { abortEarly: false });
+    console.log(res)    
+    return res;
+    }
+
    HandelSubmet = (e) => {
-    e.preventDefault()
+   e.preventDefault()
+   
+    const errors = this.valedate();
+   if(errors) {
+    return;   
+   };
+    
     console.log("submit");
    }
 
@@ -27,13 +48,13 @@ class Sign extends Component {
                 <React.Fragment>
 <form onSubmit={this.HandelSubmet}>
   <div class="form-group">
-    <label htmlFor="userName">Email address</label>
-    <input name='userName' onChange={this.Handelchange} type="email" class="form-control" id="userName" aria-describedby="emailHelp" placeholder="Enter email"/>
+    <label htmlFor="username">Email address</label>
+    <input name='username' onChange={this.Handelchange} type="email" class="form-control" id="username" aria-describedby="emailHelp" placeholder="Enter email"/>
     <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
   </div>
   <div class="form-group">
-    <label htmlFor="Password">Password</label>
-    <input name='Password' onChange={this.Handelchange} type="password" class="form-control" id="Password" placeholder="Password"/>
+    <label htmlFor="password">password</label>
+    <input name='password' onChange={this.Handelchange} type="password" class="form-control" id="password" placeholder="password"/>
   </div>
   <div class="form-check">
     <input type="checkbox" class="form-check-input" id="exampleCheck1"/>
